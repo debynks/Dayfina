@@ -52,7 +52,7 @@ async function updateCurrencyFile() {
     const exchangeRates = response.data;
 
     // Write the updated exchange rates to the JSON file
-    fs.writeFileSync(jsonFilePath, JSON.stringify(exchangeRates, null, 2), 'utf-8');
+    fs.writeFileSync(jsonFilePath, JSON.stringify(exchangeRates, null, 0), 'utf-8');
 
     // Record the current date as the last update date
     writeLastUpdateDate();
@@ -93,33 +93,30 @@ app.get('/', function(req, res){
 });
 
 // Handle form submission
+// Modify the app.post('/convert', ...) route to handle AJAX request
 app.post('/convert', (req, res) => {
-    const { amount, fromCurrency } = req.body;
+  const { amount, fromCurrency } = req.body;
 
-    try {
-        // Read contents from the JSON file
-        const exchangeRates = readCurrencyFile();
+  try {
+    // Read contents from the JSON file
+    const exchangeRates = readCurrencyFile();
 
-        if (!exchangeRates || !exchangeRates[fromCurrency]) {
-            res.status(400).json({ error: 'Invalid fromCurrency provided.' });
-            return;
-        }
-
-        // Convert the amount to Indian Rupees
-        const toCurrency = 'inr';
-        const conversionRate = 1 / exchangeRates[fromCurrency].rate;
-        const realresult = amount * conversionRate;
-        const result = realresult.toFixed(2);
-
-        res.render('index', {
-            result: result,
-            toCurrency: toCurrency,
-            exchangeRates: exchangeRates
-        });
-    } catch (error) {
-        console.error('Error converting currency:', error.message);
-        res.status(500).json({ error: 'Internal Server Error' });
+    if (!exchangeRates || !exchangeRates[fromCurrency]) {
+      res.status(400).json({ error: 'Invalid fromCurrency provided.' });
+      return;
     }
+
+    // Convert the amount to Indian Rupees
+    const toCurrency = 'inr';
+    const conversionRate = 1 / exchangeRates[fromCurrency].rate;
+    const realresult = amount * conversionRate 
+    const result = realresult.toFixed(2);
+
+    res.json({ result, toCurrency });
+  } catch (error) {
+    console.error('Error converting currency:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
   
 

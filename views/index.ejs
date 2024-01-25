@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="styleshet" href="css/style.css">
   <title>Currency Converter</title>
 </head>
 <body>
   <h1>Currency Converter</h1>
-  <form action="/convert" method="post">
+  <form>
     <label for="amount">Amount:</label>
-    <input type="text" id="amount" name="amount" required>
+    <input type="text" autocomplete="false" id="amount" name="amount" required>
 
     <label for="fromCurrency">From Currency:</label>
     <select id="fromCurrency" name="fromCurrency" required>
@@ -21,11 +22,35 @@
       <option value="kwd">Kuwaiti Dinar </option>
       <option value="sar"> Saudi Riyal </option>
     </select>
-
-    <button type="submit">Convert</button>
   </form>
 
-  
-  <div id="result"><%= result %></div>
+  <div id="result">Result: </div>
+
+  <!-- Include jQuery for AJAX -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script>
+    // Attach input event listeners to dynamically update the result
+    $('#amount, #fromCurrency').on('input', function() {
+      // Get the input values
+      const amount = $('#amount').val();
+      const fromCurrency = $('#fromCurrency').val();
+
+      // Make an AJAX request to the server for currency conversion
+      $.ajax({
+        url: '/convert',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ amount, fromCurrency }),
+        success: function(response) {
+          // Update the result dynamically
+          $('#result').text('Result: ' + response.result + ' ' + response.toCurrency);
+        },
+        error: function(error) {
+          console.error('Error converting currency:', error.responseText);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
