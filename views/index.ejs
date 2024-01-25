@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+</head>
+<body>
+  <h1>Currency Converter</h1>
+  <form action="/convert" method="post">
+    <label for="amount">Amount:</label>
+    <input type="text" id="amount" name="amount" required>
+
+    <label for="fromCurrency">From Currency:</label>
+    <select id="fromCurrency" name="fromCurrency" required>
+      <option value="aud"> Australian Dollar </option>
+      <option value="cad"> Canadian Dollar </option>
+      <option value="usd"> US Dollar </option>
+      <option value="eur"> Euro </option>
+      <option value="aed"> UAE Dirham </option>
+      <option value="kwd">Kuwaiti Dinar </option>
+      <option value="sar"> Saudi Riyal </option>
+    </select>
+
+    <button type="submit">Convert</button>
+  </form>
+
+  
+  <div id="result"><%= result %></div>
+</body>
+</html>
